@@ -6,7 +6,7 @@ int
 main(int argc, char *argv[])
 {
   int i;
-
+  //printf("argc = %d\n", argc);
   for(i = 1; i < argc; i++){
     write(1, argv[i], strlen(argv[i]));
     if(i + 1 < argc){
@@ -14,6 +14,8 @@ main(int argc, char *argv[])
     } else {
       write(1, "\n", 1);
     }
+    //printf("\nnum char :%d %c\n",i,*argv[i]);
+
   }
   exit(0);
 }
