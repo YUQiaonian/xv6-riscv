@@ -15,6 +15,7 @@ main(int argc, char *argv[])
       write(1, "\n", 1);
     }
     //printf("\nnum char :%d %c\n",i,*argv[i]);
+
   }
   exit(0);
 }

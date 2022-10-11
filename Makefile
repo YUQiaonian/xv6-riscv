@@ -132,6 +132,7 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+	$U/_sleep\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
@@ -139,8 +140,8 @@ fs.img: mkfs/mkfs README $(UPROGS)
 -include kernel/*.d user/*.d
 
 clean: 
-	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
-	*/*.o */*.d */*.asm */*.sym \
+	rm -rf *.tex *.dvi *.idx *.aux *.log *.ind *.ilg *.out* \
+	*/*.o */*.d */*.asm */*.sym _* \
 	$U/initcode $U/initcode.out $K/kernel fs.img \
 	mkfs/mkfs .gdbinit \
         $U/usys.S \
@@ -171,3 +172,19 @@ qemu-gdb: $K/kernel .gdbinit fs.img
 	@echo "*** Now run 'gdb' in another window." 1>&2
 	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
 
+##
+##  FOR testing lab grading script
+##
+
+ifneq ($(V),@)
+GRADEFLAGS += -v
+endif
+
+print-gdbport:
+	@echo $(GDBPORT)
+
+grade:
+	@echo $(MAKE) clean
+	@$(MAKE) clean || \
+          (echo "'make clean' failed.  HINT: Do you have another running instance of xv6?" && exit 1)
+	./grade-lab-util $(GRADEFLAGS)
