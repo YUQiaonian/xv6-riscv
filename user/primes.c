@@ -35,10 +35,14 @@ void primes(int fd){
 
 	if(fork() == 0){
 		//child
+        //fprintf(1, "child start %d\n",getpid());
 		close(fd);
 		close(p[1]);
 		primes(p[0]);
 		close(p[0]);
+        //TODO: line 44 question output about getpid() after primes return.
+        //fprintf(1, "child end %d\n",getpid());
+        //exit(0);
 	}
 	else{
 		//parent
@@ -46,7 +50,8 @@ void primes(int fd){
 		close(p[0]);
 		close(p[1]);
 		wait(0);
-		return;
+        //fprintf(1, "i am parent %d\n",getpid());
+		//exit(0);
 	}
 }
 
