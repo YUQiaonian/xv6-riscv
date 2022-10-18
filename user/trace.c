@@ -9,15 +9,7 @@ int main(int argc, char *argv[]){
 		targs[i - 2] = argv[i];
 	}
 	int mask = atoi(argv[1]);
-
-	if(fork() == 0){
-		//child
-		exec(targs[0], targs);
-	}
-	else{
-		//parent
-		trace(mask);
-		wait(0);
-	}
+	trace(mask);
+	exec(targs[0], targs);
 	return 0;
 }

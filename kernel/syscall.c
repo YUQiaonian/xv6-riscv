@@ -171,8 +171,12 @@ syscall(void)
     p->trapframe->a0 = syscalls[num]();
 
     //trace function
-    int flag = ((p->trmask) >> num) & lbit;
-    if(flag){
+    //take one argument, an integer "mask", 
+    //whose bits specify which system calls to trace
+    //eg. trace the fork(), promgram call trace(1<<SYS_fork)
+    //print process id, name of system call, return value
+    
+    if(((p->trmask) >> num) & lbit){
       printf("%d: syscall %s -> %d\n", p->pid, syscalls_name[num], p->trapframe->a0);
     }
 
