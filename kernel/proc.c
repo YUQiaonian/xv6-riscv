@@ -296,6 +296,9 @@ fork(void)
   }
   np->sz = p->sz;
 
+  //copy trace mask
+  np->trmask = p->trmask;
+
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -681,3 +684,32 @@ procdump(void)
     printf("\n");
   }
 }
+
+// //take one argument, an integer "mask", 
+// //whose bits specify which system calls to trace
+// //eg. trace the fork(), promgram call trace(1<<SYS_fork)
+// //print process id, name of system call, return value
+// int trace(uint32 mask){
+
+//   struct proc *p = myproc();
+//   uint32 lbit = 1;
+
+//   while(lbit){
+//     lbit = lbit & mask;
+//     swtich(lbit){
+//       case 0:
+
+//       case 1:
+//       break;
+
+//       case 1<<1:
+//       break;
+
+//       case 1<<2:
+//       break;
+
+//       default:
+//     }
+//     lbit = lbit << 1;
+//   }
+// }

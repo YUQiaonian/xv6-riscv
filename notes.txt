@@ -1,0 +1,41 @@
+notes:
+lab2 trace:
+user to call a system call:
+1. system call define in user.h
+
+2. user/usys.pl use perl script to create usys.S file
+
+3. user/usys.S is the machine code to trap jump system call function
+ li a7, SYS_exit //use register a7 to store system call name
+ ecall			 //run systemcall
+ ret             //go back
+ 
+ 4. kernel/syscall.h map between number and systemcall func
+
+ 5. kernel/syscall.c
+ static uint64 (*syscalls[])(void)  is a pointor for function
+
+ 6. system call function 
+ void syscall(void)
+{
+  int num;
+  struct proc *p = myproc();
+
+  num = p->trapframe->a7;  //get system call name from register a7 in trap frame
+
+  if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+    // Use num to lookup the system call function for num, call it,
+    // and store its return value in p->trapframe->a0
+    p->trapframe->a0 = syscalls[num]();
+  } else {
+    printf("%d %s: unknown sys call %d\n",
+            p->pid, p->name, num);
+    p->trapframe->a0 = -1;
+  }
+}
+
+7. real system call function is define in sysproc.c 
+
+8. sysproc need to use argint/argraw.. function in syscall.c to get argument form user space.
+
+9. control process in proc.c
