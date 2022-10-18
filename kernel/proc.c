@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "sysinfo.h"
 
 struct cpu cpus[NCPU];
 
@@ -683,4 +684,29 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+uint64 cal_procnum(void){
+  struct proc *p;
+  uint64 nproc = -1; 
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->state != UNUSED){
+      nproc++;
+    }
+    release(&p->lock);
+  }
+  return nproc;  
+}
+
+int sysinfo(uint64 addr){
+  struct proc *p = myproc();  
+  struct sysinfo sf;
+  sf.nproc = cal_procnum();
+  sf.freemem = cal_freemem();
+
+  if(copyout(p->pagetable, addr, (char *)&sf, sizeof(sf)) < 0)
+    return -1;
+    
+  return 0;
 }
